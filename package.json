@@ -1,14 +1,36 @@
 {
-  "name": "nertiviaapp",
-  "version": "1.0.0",
-  "description": "",
+  "name": "Nertivia",
+  "version": "0.0.2",
+  "author": "",
+  "description": "Nertivia - Chat Client",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "publish": "electron-builder --win -p always"
   },
-  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^4.1.4"
+    "electron": "^4.1.4",
+    "electron-builder": "^21.2.0"
+  },
+  "build": {
+    "appId": "nertivia.tk",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "supertiger1234",
+        "repo": "nertivia-desktop-app"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-log": "^3.0.7",
+    "electron-updater": "^4.1.2"
   }
 }

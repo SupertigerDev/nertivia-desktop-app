@@ -1,8 +1,14 @@
 const { app, BrowserWindow } = require("electron");
+const log = require('electron-log');
+const { autoUpdater } = require("electron-updater");
+
+autoUpdater.logger = log
 
 let window;
 
 const createWindow = _ => {
+  console.log(app.getVersion())
+  autoUpdater.checkForUpdatesAndNotify();
   window = new BrowserWindow({
     width: 800,
     height: 600,
