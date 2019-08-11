@@ -2,30 +2,47 @@ const { app, BrowserWindow } = require("electron");
 const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
 
-autoUpdater.logger = log
+let mainWindow;
+let updaterWindow;
 
-let window;
+const readyEvent = _ => {
 
-const createWindow = _ => {
-  console.log(app.getVersion())
-  autoUpdater.checkForUpdatesAndNotify();
-  window = new BrowserWindow({
-    width: 800,
-    height: 600,
-    minHeight: 300,
-    minWidth: 350,
+  updaterWindow = new BrowserWindow({
+    width: 400,
+    height: 500,
+    resizable: false,
     frame: false
-  });
+  })
+  updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
 
-  //window.loadURL("http://localhost:8080/login");
-  window.loadURL("https://nertivia.tk/login");
+  autoUpdater.checkForUpdates();
 
-  window.on("close", _ => {
-    window = null;
-  });
+  autoUpdater.on('checking-for-update', () => {
+    console.log("chec")
+  })
+  autoUpdater.on('update-not-available', (info) => {
+    console.log("not avu")
+  })
+  autoUpdater.on('error', (err) => {
+    console.log("Something went wrong!")
+    console.log(err.name)
+  })
+  autoUpdater.on('download-progress', (progressObj) => {
+
+  })
+
+  autoUpdater.on('update-downloaded', (info) => {
+   autoUpdater.quitAndInstall();  
+ })
+
+
+  updaterWindow.on("close", _ => {
+    updaterWindow = null;
+  })
+
 };
 
-app.on("ready", createWindow);
+app.on("ready", readyEvent);
 
 app.on("window-all-closed", _ => {
   if (process.platform !== "darwin") {
@@ -34,7 +51,26 @@ app.on("window-all-closed", _ => {
 });
 
 app.on("active", _ => {
-  if (window === null) {
-    createWindow();
+  if (updaterWindow === null) {
+    readyEvent();
   }
 });
+
+
+function loadMainWindow() {
+  if (mainWindow === null)
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    minHeight: 300,
+    minWidth: 350,
+    frame: false
+  });
+
+  //window.loadURL("http://localhost:8080/login");
+  mainWindow.loadURL("https://nertivia.tk/login");
+
+  mainWindow.on("close", _ => {
+    mainWindow = null;
+  });
+}
