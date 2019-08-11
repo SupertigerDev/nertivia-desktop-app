@@ -5,7 +5,7 @@ const constants = {
   CHECKING_UPDATE: "CHECKING_UPDATE",
   NO_UPDATE: "NO_UPDATE",
   ERROR: "ERROR",
-  DOWNLOAD_PROGRESS: "DOWNLOAD_PROGRESS"
+  UPDATE_AVAILABLE: "UPDATE_AVAILABLE"
 };
 
 window.onload = function() {
@@ -21,10 +21,9 @@ window.onload = function() {
 		if (name === constants.ERROR) {
 			messageDiv.innerText = "Something went wrong. Error: \n" + message
 		}
-		if (name === constants.DOWNLOAD_PROGRESS) {
+		if (name === constants.UPDATE_AVAILABLE) {
 			log.log('DOWNLOAD_PROGRESS')
-			log.log(message)
-			messageDiv.innerText = "Downloading updates..."
+			messageDiv.innerText = "Downloading update..."
 		}
   });
 };

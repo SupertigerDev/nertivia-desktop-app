@@ -45,8 +45,8 @@ const readyEvent = _ => {
       }, 1000);
   })
 
-  autoUpdater.on('download-progress', (progressObj) => {
-    sendUpdaterMessages('DOWNLOAD_PROGRESS', progressObj);
+  autoUpdater.on('update-available', (progressObj) => {
+    sendUpdaterMessages('UPDATE_AVAILABLE');
   })
 
   autoUpdater.on('update-downloaded', (info) => {
