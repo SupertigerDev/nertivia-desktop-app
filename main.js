@@ -1,9 +1,12 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, } = require("electron");
 const log = require('electron-log');
+const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 
-let mainWindow;
-let updaterWindow;
+
+
+let mainWindow = null;
+let updaterWindow = null;
 
 const readyEvent = _ => {
 
@@ -15,40 +18,52 @@ const readyEvent = _ => {
   })
   updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
 
-  autoUpdater.checkForUpdates();
-
+  ipcMain.once('loaded',() => {
+    autoUpdater.checkForUpdates()
+  })
+  
   autoUpdater.on('checking-for-update', () => {
-    console.log("chec")
+    sendUpdaterMessages('CHECKING_UPDATE')
   })
+  
   autoUpdater.on('update-not-available', (info) => {
-    console.log("not avu")
+    autoUpdater.removeAllListeners()
+    sendUpdaterMessages('NO_UPDATE')
+    setTimeout(() => {
+      loadMainWindow()
+      updaterWindow.close();
+    }, 1000);
   })
-  autoUpdater.on('error', (err) => {
-    console.log("Something went wrong!")
-    console.log(err.name)
-  })
-  autoUpdater.on('download-progress', (progressObj) => {
 
+  autoUpdater.on('error', (err) => {
+    autoUpdater.removeAllListeners()
+    sendUpdaterMessages('ERROR', err.message)
+    if (isDev)
+      setTimeout(() => {
+        //loadMainWindow()
+        //updaterWindow.close();
+      }, 1000);
+  })
+
+  autoUpdater.on('download-progress', (progressObj) => {
+    sendUpdaterMessages('DOWNLOAD_PROGRESS', progressObj);
   })
 
   autoUpdater.on('update-downloaded', (info) => {
    autoUpdater.quitAndInstall();  
- })
+  })
 
-
-  updaterWindow.on("close", _ => {
+  updaterWindow.once("close", _ => {
     updaterWindow = null;
   })
 
+  function sendUpdaterMessages(name, message) {
+    updaterWindow.webContents.send('updater', {name, message})
+  }
+
 };
 
-app.on("ready", readyEvent);
-
-app.on("window-all-closed", _ => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+app.once("ready", readyEvent);
 
 app.on("active", _ => {
   if (updaterWindow === null) {
@@ -58,7 +73,7 @@ app.on("active", _ => {
 
 
 function loadMainWindow() {
-  if (mainWindow === null)
+  if (mainWindow !== null) return;
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -66,11 +81,10 @@ function loadMainWindow() {
     minWidth: 350,
     frame: false
   });
-
-  //window.loadURL("http://localhost:8080/login");
   mainWindow.loadURL("https://nertivia.tk/login");
 
   mainWindow.on("close", _ => {
     mainWindow = null;
+    app.quit();
   });
 }

@@ -52,3 +52,9 @@ body{
     text-align: center;
     font-size: 30px;
 }
+.message {
+  margin-top: 20px;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  opacity: 0.9;
+}
