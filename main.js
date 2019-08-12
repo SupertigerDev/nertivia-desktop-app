@@ -9,6 +9,10 @@ const { autoUpdater } = require("electron-updater");
 let mainWindow = null;
 let updaterWindow = null;
 
+let tray = null
+let appIcon = null;
+const iconPath = path.join(__dirname, 'build/icon.ico');
+appIcon = nativeImage.createFromPath(iconPath);
 
 const singleInstanceLock = app.requestSingleInstanceLock()
 
@@ -35,6 +39,28 @@ const readyEvent = _ => {
      throw err;
   });
   
+
+  tray = new Tray(appIcon)
+
+
+  var contextMenu = Menu.buildFromTemplate([
+    { label: 'Show App', click:  function(){
+        mainWindow.show();
+    } },
+    { label: 'Quit', click:  function(){
+        app.isQuiting = true;
+        app.quit();
+    } }
+  ]);
+
+
+  tray.setContextMenu(contextMenu);
+
+  tray.setToolTip('Nertivia');
+  
+  tray.on('click', () => {
+    mainWindow.show();
+  })
 
 
   updaterWindow = new BrowserWindow({
@@ -116,39 +142,6 @@ function loadMainWindow() {
     }
     return false;
   });
-
-  var contextMenu = Menu.buildFromTemplate([
-    { label: 'Show App', click:  function(){
-        mainWindow.show();
-    } },
-    { label: 'Quit', click:  function(){
-        app.isQuiting = true;
-        app.quit();
-    } }
-  ]);
-
-
-  var appIcon = null;
-  const iconPath = path.join(__dirname, 'build/icon.ico');
-  appIcon = new Tray(nativeImage.createFromPath(iconPath));
-
-  var contextMenu = Menu.buildFromTemplate([
-    { label: 'Show App', click:  function(){
-        mainWindow.show();
-    } },
-    { label: 'Quit', click:  function(){
-        app.isQuiting = true;
-        app.quit();
-    } }
-  ]);
-
-  appIcon.setToolTip('Nertivia');
-  
-  appIcon.on('click', () => {
-    mainWindow.show();
-  })
-  appIcon.setContextMenu(contextMenu);
-
 
 
 }
