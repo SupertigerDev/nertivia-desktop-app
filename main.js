@@ -89,7 +89,7 @@ const readyEvent = _ => {
   })
 
   autoUpdater.on('error', (err) => {
-    //if (isDev)
+    if (isDev)
       loadMainWindow()
       updaterWindow.close();
     autoUpdater.removeAllListeners()
