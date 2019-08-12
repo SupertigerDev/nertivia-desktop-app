@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, dialog } = require("electron");
 const path = require('path')
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
@@ -9,7 +9,33 @@ const { autoUpdater } = require("electron-updater");
 let mainWindow = null;
 let updaterWindow = null;
 
+
+const singleInstanceLock = app.requestSingleInstanceLock()
+
+
+// Single instance lock
+if (!singleInstanceLock) {
+  app.quit()
+} 
+app.on('second-instance', (event, argv, cwd) => {
+    if (mainWindow) {
+      mainWindow.show();
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+})
+
+
+
+
 const readyEvent = _ => {
+  process.on("uncaughtException", (err) => {
+     dialog.showErrorBox("Error", err.stack)
+     app.quit();
+     throw err;
+  });
+  
+
 
   updaterWindow = new BrowserWindow({
     width: 400,

@@ -27,7 +27,8 @@
         "owner": "supertiger1234",
         "repo": "nertivia-desktop-app"
       }
-    ]
+    ],
+    "files": ["**/*", "build/icon.ico"]
   },
   "dependencies": {
     "electron-is-dev": "^1.1.0",
