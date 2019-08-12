@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu} = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require("electron");
+const path = require('path')
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
@@ -36,7 +37,7 @@ const readyEvent = _ => {
   })
 
   autoUpdater.on('error', (err) => {
-    if (isDev)
+    //if (isDev)
       loadMainWindow()
       updaterWindow.close();
     autoUpdater.removeAllListeners()
@@ -102,7 +103,8 @@ function loadMainWindow() {
 
 
   var appIcon = null;
-  appIcon = new Tray('./build/icon.ico');
+  const iconPath = path.join(__dirname, 'build/icon.ico');
+  appIcon = new Tray(nativeImage.createFromPath(iconPath));
 
   var contextMenu = Menu.buildFromTemplate([
     { label: 'Show App', click:  function(){
