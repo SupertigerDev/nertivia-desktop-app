@@ -25,6 +25,9 @@ if (!singleInstanceLock) {
   app.quit()
 } 
 
+//  fix notification sound on startup
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
 // set startup
 setOnLogin(store.get('startup.enabled', true), store.get('startup.minimized', true))
 
