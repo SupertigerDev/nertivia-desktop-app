@@ -3,7 +3,8 @@ const path = require('path')
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
-
+const Store = require('electron-store');
+const store = new Store();
 
 
 let mainWindow = null;
@@ -11,6 +12,8 @@ let updaterWindow = null;
 
 let tray = null
 let appIcon = null;
+const args = process.argv;
+const startupHidden = args.includes('--hidden')
 const iconPath = path.join(__dirname, 'build/icon.ico');
 appIcon = nativeImage.createFromPath(iconPath);
 
@@ -21,6 +24,10 @@ const singleInstanceLock = app.requestSingleInstanceLock()
 if (!singleInstanceLock) {
   app.quit()
 } 
+
+// set startup
+setOnLogin(store.get('startup.enabled', true), store.get('startup.minimized', true))
+
 app.on('second-instance', (event, argv, cwd) => {
     if (mainWindow) {
       mainWindow.show();
@@ -43,7 +50,7 @@ const readyEvent = _ => {
   tray = new Tray(appIcon)
 
 
-  var contextMenu = Menu.buildFromTemplate([
+  const contextMenu = Menu.buildFromTemplate([
     { label: 'Show App', click:  function(){
         mainWindow.show();
     } },
@@ -67,7 +74,7 @@ const readyEvent = _ => {
     width: 400,
     height: 500,
     resizable: false,
-    frame: false
+    frame: false,
   })
   updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
 
@@ -130,7 +137,11 @@ function loadMainWindow() {
     height: 800,
     minHeight: 300,
     minWidth: 350,
-    frame: false
+    frame: false,
+    show: !startupHidden,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
   mainWindow.loadURL("https://nertivia.tk/login");
   // mainWindow.loadURL("http://localhost:8080/login");
@@ -143,5 +154,26 @@ function loadMainWindow() {
     return false;
   });
 
+  ipcMain.on('startupOption',(window, {startApp, startMinimized}) => {
+    store.set('startup.enabled', startApp)
+    store.set('startup.minimized', startMinimized)
+    setOnLogin(startApp, startMinimized)
+  })
 
+
+}
+
+
+function setOnLogin(start, startMin) {
+  const appPath = app.getPath("exe");
+  const name = path.basename(appPath);
+  app.setLoginItemSettings({
+    openAtLogin: start,
+    openAsHidden: startMin,
+    appPath,
+    args: [
+      '--processStart', `"${name}"`,
+      '--process-start-args', startMin ? `"--hidden"` : '',
+    ],
+  });
 }
