@@ -4,7 +4,7 @@ Desktop app for https://nertivia.tk
 This app is currently in alpha stages and could break. Please report bugs.
 
 # Screenshots
-SOON
+![alt text](https://raw.githubusercontent.com/supertiger1234/nertivia-desktop-app/master/Preview.png)
 
 # Download
 Download the app from here: https://github.com/supertiger1234/nertivia-desktop-app/releases
