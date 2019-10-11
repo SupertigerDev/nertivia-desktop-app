@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, dialog, shell } = require("electron");
 const path = require('path')
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
@@ -147,7 +147,7 @@ function loadMainWindow() {
     }
   });
   mainWindow.loadURL("https://nertivia.tk/login");
-  // mainWindow.loadURL("http://localhost:8080/login");
+   //mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
     if(!app.isQuiting){
@@ -155,6 +155,11 @@ function loadMainWindow() {
       mainWindow.hide();
     }
     return false;
+  });
+
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
   });
 
   ipcMain.on('startupOption',(window, {startApp, startMinimized}) => {
