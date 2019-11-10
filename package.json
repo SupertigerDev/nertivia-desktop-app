@@ -34,6 +34,7 @@
     ]
   },
   "dependencies": {
+    "electron-debug": "^3.0.1",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^3.0.7",
     "electron-store": "^5.0.0",

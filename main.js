@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 const Store = require('electron-store');
 const store = new Store();
-
+const debug = require('electron-debug');
 
 let mainWindow = null;
 let updaterWindow = null;
@@ -19,6 +19,10 @@ appIcon = nativeImage.createFromPath(iconPath);
 
 const singleInstanceLock = app.requestSingleInstanceLock()
 
+debug({
+  isEnabled: true,
+  showDevTools: false,
+})
 
 // Single instance lock
 if (!singleInstanceLock) {
@@ -55,7 +59,9 @@ const readyEvent = _ => {
 
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Show App', click:  function(){
-        mainWindow.show();
+        if (mainWindow){
+          mainWindow.show();
+        }
     } },
     { label: 'Quit', click:  function(){
         app.isQuiting = true;
@@ -69,7 +75,9 @@ const readyEvent = _ => {
   tray.setToolTip('Nertivia');
   
   tray.on('click', () => {
-    mainWindow.show();
+    if (mainWindow) {
+      mainWindow.show();
+    }
   })
 
 
@@ -146,8 +154,8 @@ function loadMainWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadURL("https://nertivia.tk/login");
-   //mainWindow.loadURL("http://localhost:8080/login");
+  //mainWindow.loadURL("https://nertivia.tk/login");
+  mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
     if(!app.isQuiting){
