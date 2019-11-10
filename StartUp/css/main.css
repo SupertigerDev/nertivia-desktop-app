@@ -18,7 +18,7 @@ body{
     height: 200px;
     width: 200px;
     background-position: center;
-    background-size: 130%;
+    background-size: 100%;
     background-repeat: no-repeat;
     background-image: url(./../img/logo.svg);
     overflow: hidden;
