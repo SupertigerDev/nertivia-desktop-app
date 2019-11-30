@@ -16,7 +16,7 @@
     "electron-builder": "^21.2.0"
   },
   "build": {
-    "appId": "nertivia.tk",
+    "appId": "Nertivia+.tk",
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"

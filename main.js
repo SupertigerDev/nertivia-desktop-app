@@ -73,7 +73,7 @@ const readyEvent = _ => {
 
   tray.setContextMenu(contextMenu);
 
-  tray.setToolTip('Nertivia');
+  tray.setToolTip('Nertivia+');
   
   tray.on('click', () => {
     if (mainWindow) {
@@ -155,7 +155,7 @@ function loadMainWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadURL("https://nertivia.supertiger.tk/login");
+  mainWindow.loadURL("https://Nertivia+.supertiger.tk/login");
   //mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
