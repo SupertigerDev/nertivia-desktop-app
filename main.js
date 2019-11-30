@@ -155,7 +155,7 @@ function loadMainWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadURL("https://nertivia.tk/login");
+  mainWindow.loadURL("https://nertivia.supertiger.tk/login");
   //mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {

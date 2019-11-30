@@ -1,8 +1,8 @@
 {
-  "name": "Nertivia",
+  "name": "Nertivia+",
   "version": "0.1.2",
   "author": "",
-  "description": "Nertivia - Chat Client",
+  "description": "Nertivia+ - Tweaked Client",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -24,7 +24,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "supertiger1234",
+        "owner": "altoweb",
         "repo": "nertivia-desktop-app"
       }
     ],
