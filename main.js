@@ -5,7 +5,6 @@ const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 const Store = require('electron-store');
 const store = new Store();
-const debug = require('electron-debug');
 
 let mainWindow = null;
 let updaterWindow = null;
@@ -19,11 +18,7 @@ appIcon = nativeImage.createFromPath(iconPath);
 
 const singleInstanceLock = app.requestSingleInstanceLock()
 
-debug({
-  isEnabled: true,
-  showDevTools: false,
-  devToolsMode: 'detach',
-})
+
 
 // Single instance lock
 if (!singleInstanceLock) {
@@ -87,11 +82,19 @@ const readyEvent = _ => {
     height: 500,
     resizable: false,
     frame: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
   updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
 
   ipcMain.once('loaded',() => {
-    autoUpdater.checkForUpdates()
+    if (isDev){
+      loadMainWindow()
+      updaterWindow.close();
+    } else {
+      autoUpdater.checkForUpdates()
+    }
   })
   
   autoUpdater.on('checking-for-update', () => {
@@ -108,9 +111,10 @@ const readyEvent = _ => {
   })
 
   autoUpdater.on('error', (err) => {
-    if (isDev)
+    if (isDev){
       loadMainWindow()
       updaterWindow.close();
+    }
     autoUpdater.removeAllListeners()
     sendUpdaterMessages('ERROR', err.message)
   })
@@ -128,7 +132,9 @@ const readyEvent = _ => {
   })
 
   function sendUpdaterMessages(name, message) {
-    updaterWindow.webContents.send('updater', {name, message})
+    if (updaterWindow && updaterWindow.webContents) {
+      updaterWindow.webContents.send('updater', {name, message})
+    }
   }
 
 };
