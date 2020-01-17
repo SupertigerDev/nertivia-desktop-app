@@ -6,6 +6,13 @@ This app is currently in alpha stages and could break. Please report bugs.
 # Screenshots
 ![alt text](https://raw.githubusercontent.com/supertiger1234/nertivia-desktop-app/master/Preview.png)
 
+# Features
+* Gif Profile Pictures
+* Gif Emojis
+* Create Themes
+* Create Servers + Channels
+* Explore Servers, Themes, And more in the future
+
 # Download
 Download the app from here: https://github.com/supertiger1234/nertivia-desktop-app/releases
 
