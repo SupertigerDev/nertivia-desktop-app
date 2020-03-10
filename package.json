@@ -30,7 +30,8 @@
     ],
     "files": [
       "**/*",
-      "build/icon.ico"
+      "build/icon.ico",
+      "build/notification_icon.ico"
     ]
   },
   "dependencies": {

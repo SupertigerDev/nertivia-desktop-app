@@ -10,11 +10,15 @@ let mainWindow = null;
 let updaterWindow = null;
 
 let tray = null
-let appIcon = null;
 const args = process.argv;
 const startupHidden = args.includes('--hidden')
+
 const iconPath = path.join(__dirname, 'build/icon.ico');
-appIcon = nativeImage.createFromPath(iconPath);
+const notificationIconPath = path.join(__dirname, 'build/notification_icon.ico');
+
+const appIcon = nativeImage.createFromPath(iconPath);
+const appNotificationIcon = nativeImage.createFromPath(notificationIconPath);
+
 
 const singleInstanceLock = app.requestSingleInstanceLock()
 
@@ -67,7 +71,6 @@ const readyEvent = _ => {
 
 
   tray.setContextMenu(contextMenu);
-
   tray.setToolTip('Nertivia');
   
   tray.on('click', () => {
@@ -79,7 +82,7 @@ const readyEvent = _ => {
 
   updaterWindow = new BrowserWindow({
     width: 400,
-    height: 500,
+    height: 400,
     resizable: false,
     frame: false,
     webPreferences: {
@@ -107,7 +110,7 @@ const readyEvent = _ => {
     setTimeout(() => {
       loadMainWindow()
       updaterWindow.close();
-    }, 1000);
+    }, 500);
   })
 
   autoUpdater.on('error', (err) => {
@@ -182,8 +185,15 @@ function loadMainWindow() {
     store.set('startup.minimized', startMinimized)
     setOnLogin(startApp, startMinimized)
   })
-
-
+  ipcMain.on("notification",  (window, notificationExist) => {
+    if (notificationExist) {
+      tray.setImage(appNotificationIcon)
+      mainWindow.setIcon(appNotificationIcon)
+    } else {
+      tray.setImage(appIcon)
+      mainWindow.setIcon(appIcon)
+    }
+  })
 }
 
 
