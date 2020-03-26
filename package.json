@@ -1,7 +1,11 @@
 {
   "name": "Nertivia",
   "version": "0.1.6",
-  "author": "",
+  "author": {
+    "name" : "Barney Rubble",
+    "email" : "b@rubble.com",
+    "url" : "http://barnyrubble.tumblr.com/"
+  },
   "description": "Nertivia - Chat Client",
   "main": "main.js",
   "scripts": {
@@ -19,12 +23,20 @@
     "appId": "nertivia.tk",
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "build/icon-generic.png"
     },
     "linux": {
-      "target": "AppImage",
+      "target": "appImage",
       "category": "Network",
       "icon": "build/icon-generic.png"
+    },
+    "appImage": {
+      "category": "Network"
+    },
+    "deb": {
+      "packageCategory": "Network",
+      "priority": "standard",
+      "depends": []
     },
     "publish": [
       {
