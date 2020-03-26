@@ -1,11 +1,7 @@
 {
   "name": "Nertivia",
   "version": "0.1.6",
-  "author": {
-    "name" : "Barney Rubble",
-    "email" : "b@rubble.com",
-    "url" : "http://barnyrubble.tumblr.com/"
-  },
+  "author": "",
   "description": "Nertivia - Chat Client",
   "main": "main.js",
   "scripts": {
