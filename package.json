@@ -21,17 +21,29 @@
   },
   "build": {
     "appId": "nertivia.tk",
+    "directories": {
+      "output": "dist"
+    },
     "win": {
       "target": "nsis",
-      "icon": "build/icon-generic.png"
+      "icon": "build/icon.ico"
     },
     "linux": {
-      "target": "appImage",
+      "icon": "build/icon-generic.png",
+      "executableName": "nertivia",
       "category": "Network",
-      "icon": "build/icon-generic.png"
+      "target": [
+        {
+          "target": "appImage"
+        },
+        {
+          "target": "deb"
+        }
+      ]
     },
     "appImage": {
-      "category": "Network"
+      "category": "Network",
+      "desktop": "build/desktop.ini"
     },
     "deb": {
       "packageCategory": "Network",
@@ -41,7 +53,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "supertiger1234",
+        "owner": "frju365",
         "repo": "nertivia-desktop-app"
       }
     ],
