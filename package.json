@@ -19,7 +19,7 @@
     "appId": "nertivia.tk",
     "win": {
       "target": "nsis",
-      "icon": "build/icon-generic.png"
+      "icon": "build/icon.ico"
     },
     "linux": {
       "target": "AppImage",
