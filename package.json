@@ -19,7 +19,12 @@
     "appId": "nertivia.tk",
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "build/icon-generic.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Network",
+      "icon": "build/icon-generic.png"
     },
     "publish": [
       {
@@ -31,7 +36,9 @@
     "files": [
       "**/*",
       "build/icon.ico",
-      "build/notification_icon.ico"
+      "build/icon-generic.png",
+      "build/notification_icon.ico",
+      "build/16x16.ico"
     ]
   },
   "dependencies": {
