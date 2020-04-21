@@ -5,6 +5,7 @@ const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 const Store = require('electron-store');
 const store = new Store();
+const {ProcessListen} = require("active-window-listener");
 
 let mainWindow = null;
 let updaterWindow = null;
@@ -150,6 +151,7 @@ app.on("active", _ => {
   }
 });
 
+let activityListener;
 
 function loadMainWindow() {
   if (mainWindow !== null) return;
@@ -164,8 +166,8 @@ function loadMainWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadURL("https://nertivia.tk/login");
-  //mainWindow.loadURL("http://localhost:8080/login");
+  //mainWindow.loadURL("https://nertivia.tk/login");
+  mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
     if(!app.isQuiting){
@@ -179,6 +181,10 @@ function loadMainWindow() {
     event.preventDefault();
     shell.openExternal(url);
   });
+
+  ipcMain.on('activity_status:update', (event, programNameArr) => {
+    startListeningProgramActivity(programNameArr)
+  })
 
   ipcMain.on('startupOption',(window, {startApp, startMinimized}) => {
     store.set('startup.enabled', startApp)
@@ -196,6 +202,15 @@ function loadMainWindow() {
   })
 }
 
+function startListeningProgramActivity(programNameArr) {
+  if (activityListener) activityListener.clearEvent()
+  if (!programNameArr.length) return;
+  activityListener = new ProcessListen(programNameArr);
+  activityListener.changed((window) => {
+    if (!window) return mainWindow.webContents.send('activity_status:changed', false)
+    mainWindow.webContents.send('activity_status:changed', window.path.split("\\")[window.path.split("\\").length - 1]);
+  })
+}
 
 function setOnLogin(start, startMin) {
   const appPath = app.getPath("exe");
