@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 const Store = require('electron-store');
 const store = new Store();
-const {ProcessListen} = require("active-window-listener");
+const { ProcessListen } = require("active-window-listener");
 
 let mainWindow = null;
 let updaterWindow = null;
@@ -28,7 +28,7 @@ const singleInstanceLock = app.requestSingleInstanceLock()
 // Single instance lock
 if (!singleInstanceLock) {
   app.quit()
-} 
+}
 
 //  fix notification sound on startup
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
@@ -37,11 +37,11 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 setOnLogin(store.get('startup.enabled', true), store.get('startup.minimized', true))
 
 app.on('second-instance', (event, argv, cwd) => {
-    if (mainWindow) {
-      mainWindow.show();
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
+  if (mainWindow) {
+    mainWindow.show();
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
 })
 
 
@@ -49,31 +49,35 @@ app.on('second-instance', (event, argv, cwd) => {
 
 const readyEvent = _ => {
   process.on("uncaughtException", (err) => {
-     dialog.showErrorBox("Error", err.stack)
-     app.quit();
-     throw err;
+    dialog.showErrorBox("Error", err.stack)
+    app.quit();
+    throw err;
   });
-  
+
 
   tray = new Tray(appIcon)
 
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Show App', click:  function(){
-        if (mainWindow){
+    {
+      label: 'Show App', click: function () {
+        if (mainWindow) {
           mainWindow.show();
         }
-    } },
-    { label: 'Quit', click:  function(){
+      }
+    },
+    {
+      label: 'Quit', click: function () {
         app.isQuiting = true;
         app.quit();
-    } }
+      }
+    }
   ]);
 
 
   tray.setContextMenu(contextMenu);
   tray.setToolTip('Nertivia');
-  
+
   tray.on('click', () => {
     if (mainWindow) {
       mainWindow.show();
@@ -92,21 +96,23 @@ const readyEvent = _ => {
   })
   updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
 
-  ipcMain.once('loaded',() => {
-    if (isDev){
+  ipcMain.on('updater_window_loaded', updaterWindowLoaded)
+  function updaterWindowLoaded() {
+    if (isDev) {
       loadMainWindow()
       updaterWindow.close();
     } else {
       autoUpdater.checkForUpdates()
     }
-  })
-  
+  }
+
   autoUpdater.on('checking-for-update', () => {
     sendUpdaterMessages('CHECKING_UPDATE')
   })
-  
+
   autoUpdater.on('update-not-available', (info) => {
     autoUpdater.removeAllListeners()
+    ipcMain.removeListener('updater_window_loaded', updaterWindowLoaded)
     sendUpdaterMessages('NO_UPDATE')
     setTimeout(() => {
       loadMainWindow()
@@ -115,11 +121,10 @@ const readyEvent = _ => {
   })
 
   autoUpdater.on('error', (err) => {
-    if (isDev){
+    if (isDev) {
       loadMainWindow()
       updaterWindow.close();
     }
-    autoUpdater.removeAllListeners()
     sendUpdaterMessages('ERROR', err.message)
   })
 
@@ -128,16 +133,18 @@ const readyEvent = _ => {
   })
 
   autoUpdater.on('update-downloaded', (info) => {
-   autoUpdater.quitAndInstall();  
+    autoUpdater.quitAndInstall();
   })
 
-  updaterWindow.once("close", _ => {
+  updaterWindow.on("close", _ => {
+    updaterWindow.removeAllListeners()
+    autoUpdater.removeAllListeners()
     updaterWindow = null;
   })
 
   function sendUpdaterMessages(name, message) {
     if (updaterWindow && updaterWindow.webContents) {
-      updaterWindow.webContents.send('updater', {name, message})
+      updaterWindow.webContents.send('updater', { name, message })
     }
   }
 
@@ -170,7 +177,7 @@ function loadMainWindow() {
   //mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
-    if(!app.isQuiting){
+    if (!app.isQuiting) {
       event.preventDefault();
       mainWindow.hide();
     }
@@ -186,12 +193,12 @@ function loadMainWindow() {
     startListeningProgramActivity(programNameArr)
   })
 
-  ipcMain.on('startupOption',(window, {startApp, startMinimized}) => {
+  ipcMain.on('startupOption', (window, { startApp, startMinimized }) => {
     store.set('startup.enabled', startApp)
     store.set('startup.minimized', startMinimized)
     setOnLogin(startApp, startMinimized)
   })
-  ipcMain.on("notification",  (window, notificationExist) => {
+  ipcMain.on("notification", (window, notificationExist) => {
     if (notificationExist) {
       tray.setImage(appNotificationIcon)
       mainWindow.setIcon(appNotificationIcon)
