@@ -1,6 +1,6 @@
 {
   "name": "Nertivia",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "",
   "description": "Nertivia - Chat Client",
   "main": "main.js",
@@ -31,7 +31,9 @@
     "files": [
       "**/*",
       "build/icon.ico",
-      "build/notification_icon.ico"
+      "build/notification_icon.ico",
+      "build/icon.png",
+      "build/notification_icon.png"
     ]
   },
   "dependencies": {

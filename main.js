@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, dialog, shell } = require("electron");
+const os = require("os")
 const path = require('path')
 const log = require('electron-log');
 const isDev = require('electron-is-dev');
@@ -14,8 +15,17 @@ let tray = null
 const args = process.argv;
 const startupHidden = args.includes('--hidden')
 
-const iconPath = path.join(__dirname, 'build/icon.ico');
-const notificationIconPath = path.join(__dirname, 'build/notification_icon.ico');
+let iconPath;
+let notificationIconPath;
+
+// if windows
+if (os.type == 'Windows_NT') {
+  iconPath = path.join(__dirname, 'build/icon.ico');
+  notificationIconPath = path.join(__dirname, 'build/notification_icon.ico');
+} else {
+  iconPath = path.join(__dirname, 'build/icon.png');
+  notificationIconPath = path.join(__dirname, 'build/notification_icon.png');
+}
 
 const appIcon = nativeImage.createFromPath(iconPath);
 const appNotificationIcon = nativeImage.createFromPath(notificationIconPath);
@@ -95,6 +105,7 @@ const readyEvent = _ => {
     }
   })
   updaterWindow.loadURL('file://' + __dirname + '/StartUp/index.html');
+  updaterWindow.setIcon(appIcon)
 
   ipcMain.on('updater_window_loaded', updaterWindowLoaded)
   function updaterWindowLoaded() {
@@ -174,6 +185,7 @@ function loadMainWindow() {
     }
   });
   mainWindow.loadURL("https://nertivia.tk/login");
+  mainWindow.setIcon(appIcon)
   //mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
