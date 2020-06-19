@@ -6,7 +6,7 @@ const isDev = require('electron-is-dev');
 const { autoUpdater } = require("electron-updater");
 const Store = require('electron-store');
 const store = new Store();
-const { ProcessListen } = require("active-window-listener");
+const { ProcessListen, getWindows } = require("active-window-listener");
 
 let mainWindow = null;
 let updaterWindow = null;
@@ -171,6 +171,9 @@ app.on("active", _ => {
 
 let activityListener;
 
+
+
+
 function loadMainWindow() {
   if (mainWindow !== null) return;
   mainWindow = new BrowserWindow({
@@ -184,9 +187,9 @@ function loadMainWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadURL("https://nertivia.tk/login");
+  //mainWindow.loadURL("https://nertivia.tk/login");
   mainWindow.setIcon(appIcon)
-  //mainWindow.loadURL("http://localhost:8080/login");
+  mainWindow.loadURL("http://localhost:8080/login");
 
   mainWindow.on("close", event => {
     if (!app.isQuiting) {
@@ -203,6 +206,10 @@ function loadMainWindow() {
 
   ipcMain.on('activity_status:update', (event, programNameArr) => {
     startListeningProgramActivity(programNameArr)
+  })
+
+  ipcMain.on('get_all_running_programs', async (event, storedPrograms) => {
+    event.reply("all_running_programs", await getAllRunningPrograms(storedPrograms));
   })
 
   ipcMain.on('startupOption', (window, { startApp, startMinimized }) => {
@@ -243,4 +250,34 @@ function setOnLogin(start, startMin) {
       '--process-start-args', startMin ? `"--hidden"` : '',
     ],
   });
+}
+
+
+async function getAllRunningPrograms(storedPrograms = []) {
+  const windows = getWindows();
+  const map = await Promise.all(
+    windows.map(async window => {
+      const filename = window.path.split("\\")[
+        window.path.split("\\").length - 1
+      ];
+      if (storedPrograms.find(sp => sp.filename === filename))
+        return undefined;
+      let title;
+      try {
+        const exif = await window.getExif();
+        if (exif.FileDescription && exif.FileDescription.trim().length) {
+          title = exif.FileDescription;
+        } else if (exif.ProductName && exif.ProductName.trim().length) {
+          title = exif.ProductName;
+        } else {
+          title = window.getTitle();
+        }
+      } catch {
+        title = window.getTitle();
+      }
+      return { name: title, filename };
+    })
+  );
+  const filter = map.filter(w => w !== undefined);
+  return filter;
 }
