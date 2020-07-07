@@ -136,6 +136,12 @@ const readyEvent = _ => {
       loadMainWindow()
       updaterWindow.close();
     }
+    //Scuffed solution but works for now
+    //Should be tested later with a newer version!!
+    else if(err.message.includes("mac")){
+      loadMainWindow()
+      updaterWindow.close();
+    }
     sendUpdaterMessages('ERROR', err.message)
   })
 
