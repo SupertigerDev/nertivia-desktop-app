@@ -10,7 +10,8 @@
     "dist-win": "electron-builder",
     "dist-mac": "electron-builder --mac",
     "dist-linux": "electron-builder --linux",
-    "publish": "electron-builder --win -p always"
+    "publish-win": "electron-builder --win -p always",
+    "publish-macos": "electron-builder --mac -p always"
   },
   "license": "ISC",
   "devDependencies": {
