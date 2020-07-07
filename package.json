@@ -1,6 +1,6 @@
 {
   "name": "Nertivia",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "",
   "description": "Nertivia - Chat Client",
   "main": "main.js",
@@ -11,7 +11,7 @@
     "dist-mac": "electron-builder --mac",
     "dist-linux": "electron-builder --linux",
     "publish-win": "electron-builder --win -p always",
-    "publish-macos": "electron-builder --mac -p always"
+    "publish-macos": "electron-builder --mac -p always -c.mac.identity=null"
   },
   "license": "ISC",
   "devDependencies": {
@@ -24,6 +24,14 @@
       "target": "nsis",
       "icon": "build/icon.ico"
     },
+
+    "mac":{
+      "target":[
+        "dmg"
+      ],
+      "icon": "build/icon.png"
+    },
+
     "publish": [
       {
         "provider": "github",
