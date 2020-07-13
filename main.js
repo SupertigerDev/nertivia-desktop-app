@@ -96,6 +96,7 @@ const readyEvent = _ => {
 
 
   updaterWindow = new BrowserWindow({
+    icon: iconPath,
     width: 400,
     height: 400,
     resizable: false,
@@ -188,6 +189,7 @@ let activityListener;
 function loadMainWindow() {
   if (mainWindow !== null) return;
   mainWindow = new BrowserWindow({
+    icon: iconPath,
     width: 1200,
     height: 800,
     minHeight: 300,
