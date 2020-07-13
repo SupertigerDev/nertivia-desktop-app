@@ -21,8 +21,10 @@ window.onload = function () {
 			messageDiv.innerText = "Starting..."
 		}
 		if (name === constants.ERROR) {
+
+			document.getElementById("continueButton").style.display = "block";
 			let timer = 5;
-			messageDiv.innerHTML = `<div class="top-error">Something went wrong. Error:</div>\n${message}\n\n <div class='retry-countdown'>Retrying in ${timer}</div>`
+			messageDiv.innerHTML = `<div class="top-error">Something went wrong. Error:</div>${message.slice(0, 100)}<br><div class='retry-countdown'>Retrying in ${timer}</div>`
 			errorInterval = setInterval(function() {
 				if (timer === 0) {
 					ipcRenderer.send("updater_window_loaded");
@@ -31,7 +33,7 @@ window.onload = function () {
 				}
 				document.querySelector('.retry-countdown').innerHTML
 				timer -= 1;
-				messageDiv.innerHTML = `<div class="top-error">Something went wrong. Error:</div>\n${message}\n\n <div class='retry-countdown'>Retrying in ${timer}</div>`
+				messageDiv.innerHTML = `<div class="top-error">Something went wrong. Error:</div>${message.slice(0, 100)}<br><div class='retry-countdown'>Retrying in ${timer}</div>`
 			}, 1000);
 
 		}
@@ -40,5 +42,8 @@ window.onload = function () {
 			messageDiv.innerText = "Downloading update..."
 		}
 	});
+	document.getElementById("continueButton").addEventListener('click', () => {
+		ipcRenderer.send("skip_updater_window");
+	})
 };
 

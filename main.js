@@ -108,6 +108,7 @@ const readyEvent = _ => {
   updaterWindow.setIcon(appIcon)
 
   ipcMain.on('updater_window_loaded', updaterWindowLoaded)
+  ipcMain.on('skip_updater_window', skipUpdaterWindow)
   function updaterWindowLoaded() {
     if (isDev) {
       loadMainWindow()
@@ -116,7 +117,10 @@ const readyEvent = _ => {
       autoUpdater.checkForUpdates()
     }
   }
-
+  function skipUpdaterWindow() {
+    loadMainWindow()
+    updaterWindow.close();
+  }
   autoUpdater.on('checking-for-update', () => {
     sendUpdaterMessages('CHECKING_UPDATE')
   })
@@ -124,6 +128,7 @@ const readyEvent = _ => {
   autoUpdater.on('update-not-available', (info) => {
     autoUpdater.removeAllListeners()
     ipcMain.removeListener('updater_window_loaded', updaterWindowLoaded)
+    ipcMain.removeListener('skip_updater_window', skipUpdaterWindow)
     sendUpdaterMessages('NO_UPDATE')
     setTimeout(() => {
       loadMainWindow()

@@ -75,3 +75,11 @@ body {
   color: white;
   font-weight: bold;
 }
+.button {
+  display: none;
+  padding: 5px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  margin-top: 10px;
+}
