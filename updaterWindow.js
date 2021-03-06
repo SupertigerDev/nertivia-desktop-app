@@ -33,5 +33,6 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 	}
 	ipcMain.on("check_update", checkUpdate)
 	ipcMain.on("close_updater", closeUpdater)
+	updaterWindow.webContents.openDevTools({mode: 'detach'});
 	updaterWindow.loadURL(path.join(__dirname, "view", "updater", "index.html"));
 }

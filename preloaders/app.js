@@ -10,13 +10,13 @@ contextBridge.exposeInMainWorld(
         isElectron: true,
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ["check_update", "close_updater"];
+            let validChannels = [];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ["skip_update"];
+            let validChannels = [];
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender` 
                 ipcRenderer.on(channel, (event, ...args) => func(...args));

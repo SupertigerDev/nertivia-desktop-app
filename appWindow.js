@@ -5,10 +5,11 @@ let appWindow = null
 
 module.exports = function loadAppWindow(url) {
 	if (appWindow) return;
-	updaterWindow = new BrowserWindow({
+	appWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
 		frame: false,
+		minWidth: 300,
 		webPreferences: {
 			enableRemoteModule: true,
 			preload: path.join(__dirname , "preloaders",'app.js'),
@@ -16,5 +17,6 @@ module.exports = function loadAppWindow(url) {
 
 		}
 	})
-	updaterWindow.loadURL(url);
+	appWindow.webContents.openDevTools({mode: 'detach'});
+	appWindow.loadURL(url);
 }

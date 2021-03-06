@@ -3,9 +3,9 @@ const appWindow = require("./appWindow");
 const updaterWindow = require("./updaterWindow")
 
 const DEV_MODE = true;
-let URL = "https://beta.nertivia.net/login";
+let URL = "https://beta.nertivia.net/app";
 if (DEV_MODE) {
-  URL = "http://localhost:8080/login";
+  URL = "http://localhost:8080/app";
 }
 
 function ready() {
