@@ -3,7 +3,7 @@ const path = require("path");
 
 let appWindow = null
 
-module.exports = function loadAppWindow(url) {
+module.exports = function loadAppWindow(devMode, url) {
 	if (appWindow) return;
 	appWindow = new BrowserWindow({
 		width: 800,
@@ -13,7 +13,7 @@ module.exports = function loadAppWindow(url) {
 		webPreferences: {
 			enableRemoteModule: true,
 			preload: path.join(__dirname , "preloaders",'app.js'),
-			webSecurity: false
+			webSecurity: devMode
 
 		}
 	})

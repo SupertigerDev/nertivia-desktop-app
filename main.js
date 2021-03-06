@@ -11,7 +11,7 @@ if (DEV_MODE) {
 function ready() {
   updaterWindow(DEV_MODE, done => {
     if (!done) return;
-    appWindow(URL);
+    appWindow(DEV_MODE, URL);
   })
 }
 
