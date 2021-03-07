@@ -1,6 +1,7 @@
 const {
     contextBridge,
-    ipcRenderer
+    ipcRenderer,
+    remote
 } = require("electron");
 
 // Expose protected methods that allow the renderer process to use
@@ -8,17 +9,21 @@ const {
 contextBridge.exposeInMainWorld(
     "api", {
         isElectron: true,
+        // window: {
+        //     minimize: remote.BrowserWindow.getFocusedWindow().minimize(),
+        //     maximize: remote.BrowserWindow.getFocusedWindow().maximize(), 
+        //     close: remote.BrowserWindow.getFocusedWindow().close(),
+        // },
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = [];
+            let validChannels = ["window_action"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = [];
+            let validChannels = ["window_action"];
             if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender` 
                 ipcRenderer.on(channel, (event, ...args) => func(...args));
             }
         }

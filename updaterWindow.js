@@ -12,7 +12,6 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 		frame: false,
 		transparent: true,
 		webPreferences: {
-			enableRemoteModule: true,
 			preload: path.join(__dirname , "preloaders",'updater.js'),
 		}
 	})
@@ -33,6 +32,8 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 	}
 	ipcMain.on("check_update", checkUpdate)
 	ipcMain.on("close_updater", closeUpdater)
-	updaterWindow.webContents.openDevTools({mode: 'detach'});
+	if (devMode) {
+		// updaterWindow.webContents.openDevTools({mode: 'detach'});
+	}
 	updaterWindow.loadURL(path.join(__dirname, "view", "updater", "index.html"));
 }
