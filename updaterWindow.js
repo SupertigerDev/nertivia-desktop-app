@@ -20,6 +20,7 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 			updaterWindow.webContents.send("skip_update", "Dev Mode");
 			return;
 		}
+		updaterWindow.webContents.send("skip_update", "Not Implimented");
 	}
 	const closeUpdater = (event, args) => {
 		ipcMain.off("check_update", checkUpdate);
