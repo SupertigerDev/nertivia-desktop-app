@@ -1,7 +1,7 @@
 const {app, BrowserWindow} = require("electron");
-const appWindow = require("./appWindow");
+const {loadAppWindow} = require("./appWindow");
 const updaterWindow = require("./updaterWindow")
-
+const getTray = require("./utils/TrayInstance");
 const DEV_MODE = true;
 let URL = "https://beta.nertivia.net/app";
 if (DEV_MODE) {
@@ -9,9 +9,10 @@ if (DEV_MODE) {
 }
 
 function ready() {
+  getTray();
   updaterWindow(DEV_MODE, done => {
     if (!done) return;
-    appWindow(DEV_MODE, URL);
+    loadAppWindow(DEV_MODE, URL);
   })
 }
 
@@ -19,6 +20,7 @@ app.whenReady().then(ready)
 
 
 app.on('window-all-closed', () => {
+  getTray().destroy();
   if (process.platform !== 'darwin') {
     app.quit()
   }

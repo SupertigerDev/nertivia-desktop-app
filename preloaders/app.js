@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld(
         // },
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ["window_action"];
+            let validChannels = ["window_action", "notification_badge"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }

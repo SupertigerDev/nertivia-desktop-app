@@ -1,5 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
 const path = require('path');
+const { setAppIcon } = require("./utils/AppIconHandler");
 
 let updaterWindow = null
 
@@ -15,6 +16,8 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 			preload: path.join(__dirname , "preloaders",'updater.js'),
 		}
 	})
+	setAppIcon(updaterWindow, null, 0);
+
 	const checkUpdate = (event, args) => {
 		if (devMode) {
 			updaterWindow.webContents.send("skip_update", "Dev Mode");
@@ -33,8 +36,5 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 	}
 	ipcMain.on("check_update", checkUpdate)
 	ipcMain.on("close_updater", closeUpdater)
-	if (devMode) {
-		// updaterWindow.webContents.openDevTools({mode: 'detach'});
-	}
 	updaterWindow.loadURL(path.join(__dirname, "view", "updater", "index.html"));
 }
