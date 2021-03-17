@@ -16,7 +16,7 @@ module.exports = {
 			minWidth: 300,
 			webPreferences: {
 				preload: path.join(__dirname, "preloaders", 'app.js'),
-				webSecurity: devMode
+				webSecurity: !devMode
 
 			}
 		})

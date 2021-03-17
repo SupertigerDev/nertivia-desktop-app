@@ -1,4 +1,6 @@
 const { BrowserWindow, ipcMain } = require("electron");
+const { autoUpdater } = require("electron-updater");
+
 const path = require('path');
 const { setAppIcon } = require("./utils/AppIconHandler");
 
@@ -23,8 +25,25 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 			updaterWindow.webContents.send("skip_update", "Dev Mode");
 			return;
 		}
-		updaterWindow.webContents.send("skip_update", "Not Implimented");
+		autoUpdater.checkForUpdates();
+		
+		
+		// updaterWindow.webContents.send("skip_update", "Not Implimented");
 	}
+	autoUpdater.on("update-not-available", () => {
+		autoUpdater.removeAllListeners()
+		updaterWindow.webContents.send("skip_update", "No Updates.");
+	})
+	autoUpdater.on("error", (err) => {
+		autoUpdater.removeAllListeners()
+		updaterWindow.webContents.send("skip_update", err.message);
+	})
+	autoUpdater.on('update-available', (progressObj) => {
+		sendUpdaterMessages('update_available');
+	})
+	autoUpdater.on('update-downloaded', (info) => {
+		autoUpdater.quitAndInstall();
+	})
 	const closeUpdater = (event, args) => {
 		ipcMain.off("check_update", checkUpdate);
 		ipcMain.off("close_updater", closeUpdater);
