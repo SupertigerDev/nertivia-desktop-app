@@ -1,29 +1,31 @@
-const {app, Tray, Menu} = require("electron");
-const {appWindow} = require("../appWindow");
+const { Tray, Menu} = require("electron");
 const {appIcon} = require("./AppIconHandler");
 let tray;
 
-const contextMenu = Menu.buildFromTemplate([
+const contextMenu = () => {
+  return Menu.buildFromTemplate([
     {
       label: 'Show App', click: function () {
-        if (appWindow) {
-          appWindow.show();
-        }
+        require("../appWindow").getAppWindow()?.show()
       }
     },
     {
       label: 'Quit', click: function () {
+        const app = require("electron").app;
+        require("../appWindow").getAppWindow()?.close()
+        require("../appWindow").getAppWindow()?.destroy()
         app.isQuiting = true;
         app.quit();
       }
     }
   ]);
+}
 
 
-module.exports = function getTray() {
+module.exports = function getTray(appWidow) {
     if (tray) return tray;
     tray = new Tray(appIcon);
     tray.setToolTip('Nertivia');
-    tray.setContextMenu(contextMenu)
+    tray.setContextMenu(contextMenu())
     return tray;
 }

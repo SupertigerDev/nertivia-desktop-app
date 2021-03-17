@@ -6,7 +6,9 @@ const getTray = require("./utils/TrayInstance");
 let appWindow = null
 
 module.exports = {
-	appWindow,
+	getAppWindow() {
+		return appWindow
+	},
 	loadAppWindow(devMode, url) {
 		if (appWindow) return;
 		appWindow = new BrowserWindow({
