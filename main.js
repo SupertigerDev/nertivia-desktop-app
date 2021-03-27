@@ -2,7 +2,7 @@ const {app, BrowserWindow} = require("electron");
 const {loadAppWindow, getAppWindow} = require("./appWindow");
 const updaterWindow = require("./updaterWindow")
 const getTray = require("./utils/TrayInstance");
-const DEV_MODE = true;
+const DEV_MODE = false;
 let URL = "https://beta.nertivia.net/app";
 if (DEV_MODE) {
   URL = "http://localhost:8080/app";
