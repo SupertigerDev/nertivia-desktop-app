@@ -1,4 +1,4 @@
-const { BrowserWindow, ipcMain } = require("electron");
+const { BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const { setAppIcon } = require("./utils/AppIconHandler");
 const getTray = require("./utils/TrayInstance");
@@ -19,7 +19,6 @@ module.exports = {
 			webPreferences: {
 				preload: path.join(__dirname, "preloaders", 'app.js'),
 				webSecurity: !devMode
-
 			}
 		})
 
@@ -30,6 +29,11 @@ module.exports = {
 
 
 		appWindow.loadURL(url);
+
+		appWindow.webContents.on('new-window', (event, url) => {
+			event.preventDefault();
+			shell.openExternal(url);
+		});
 		// windowEvents
 		ipcMain.on("window_action", (event, action) => {
 			action === "minimize" && appWindow.minimize()
