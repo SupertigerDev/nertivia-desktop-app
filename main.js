@@ -1,6 +1,7 @@
 const {app, BrowserWindow} = require("electron");
 const {loadAppWindow, getAppWindow} = require("./appWindow");
-const updaterWindow = require("./updaterWindow")
+const updaterWindow = require("./updaterWindow");
+const startup = require("./utils/startup");
 const getTray = require("./utils/TrayInstance");
 const DEV_MODE = false;
 let URL = "https://beta.nertivia.net/app";
@@ -17,9 +18,8 @@ app.on('second-instance', (event, argv, cwd) => {
   }
 })
 
-
-
-
+// set startup options
+startup();
 function ready() {
   if (!singleInstanceLock){
     app.quit();

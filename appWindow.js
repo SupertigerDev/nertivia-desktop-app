@@ -1,7 +1,11 @@
 const { BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("path");
 const { setAppIcon } = require("./utils/AppIconHandler");
+const startup = require("./utils/startup");
+const {store} = require("./utils/storeInstance");
 const getTray = require("./utils/TrayInstance");
+const args = process.argv;
+const startupHidden = args.includes('--hidden')
 
 let appWindow = null
 
@@ -16,6 +20,7 @@ module.exports = {
 			height: 600,
 			frame: false,
 			minWidth: 300,
+			show: !startupHidden,
 			webPreferences: {
 				preload: path.join(__dirname, "preloaders", 'app.js'),
 				webSecurity: !devMode
@@ -47,6 +52,16 @@ module.exports = {
 		ipcMain.on("notification_badge", (event, action) => {
 			setAppIcon(appWindow, getTray(), action);
 		})
+		ipcMain.handle('get_store_value', (event, key, defaultValue) => {
+			return store.get(key, defaultValue);
+		});
+		ipcMain.handle('set_store_value', (event, key, value) => {
+			store.set(key, value);
+			if (key.startsWith("startup")) {
+				// set startup options
+				startup();
+			}
+		});
 
 		getTray().on('click', () => {
 			appWindow.show();
