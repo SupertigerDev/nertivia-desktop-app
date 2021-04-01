@@ -3,7 +3,7 @@ const {loadAppWindow, getAppWindow} = require("./appWindow");
 const updaterWindow = require("./updaterWindow");
 const startup = require("./utils/startup");
 const getTray = require("./utils/TrayInstance");
-const DEV_MODE = false;
+const DEV_MODE = true;
 let URL = "https://beta.nertivia.net/app";
 if (DEV_MODE) {
   URL = "http://localhost:8080/app";

@@ -16,13 +16,13 @@ contextBridge.exposeInMainWorld(
         // },
         send: (channel, data) => {
             // whitelist channels
-            let validChannels = ["window_action", "notification_badge"];
+            let validChannels = ["window_action", "notification_badge", "activity_listener_restart"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ["window_action"];
+            let validChannels = ["window_action", "activity_status_changed"];
             if (validChannels.includes(channel)) {
                 ipcRenderer.on(channel, (event, ...args) => func(...args));
             }
