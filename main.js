@@ -14,7 +14,6 @@ app.on('second-instance', (event, argv, cwd) => {
   if (getAppWindow()) {
     getAppWindow().show();
     if (getAppWindow().isMinimized()) getAppWindow().restore();
-    
     getAppWindow().focus();
   }
 })
