@@ -33,8 +33,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "supertiger1234",
-        "repo": "nertivia-desktop-app"
+        "releaseType": "release"
       }
     ],
     "files": [
