@@ -6,7 +6,6 @@ window.api.receive("skip_update", reason => {
 });
 window.api.receive("update_available", reason => {
 	actionDiv.innerHTML = "Updating Nertivia...";
-	closeUpdater(2000);
 });
 
 window.api.send("check_update");
