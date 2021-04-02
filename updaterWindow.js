@@ -39,7 +39,7 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 		updaterWindow.webContents.send("skip_update", err.message);
 	})
 	autoUpdater.on('update-available', (progressObj) => {
-		sendUpdaterMessages('update_available');
+		updaterWindow.webContents.send('update_available');
 	})
 	autoUpdater.on('update-downloaded', (info) => {
 		autoUpdater.quitAndInstall();
