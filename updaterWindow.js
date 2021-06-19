@@ -55,5 +55,5 @@ module.exports = function loadUpdaterWindow(devMode, done) {
 	}
 	ipcMain.on("check_update", checkUpdate)
 	ipcMain.on("close_updater", closeUpdater)
-	updaterWindow.loadURL(path.join(__dirname, "view", "updater", "index.html"));
+	updaterWindow.loadFile(path.join(__dirname, "view", "updater", "index.html"));
 }
