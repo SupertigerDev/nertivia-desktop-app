@@ -1,6 +1,6 @@
 {
   "name": "nertivia",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "author": "",
   "description": "Nertivia - Chat Client",
   "main": "main.js",
@@ -30,6 +30,11 @@
       ],
       "icon": "build/icon.png"
     },
+		"linux": {
+			"target": ["AppImage"],
+			"category": "Network",
+      "icon": "build/icon.png"
+		},
     "publish": [
       {
         "provider": "github",
