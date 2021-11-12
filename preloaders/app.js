@@ -1,7 +1,8 @@
 const {
     contextBridge,
     ipcRenderer,
-    remote
+    remote,
+    desktopCapturer
 } = require("electron");
 
 // Expose protected methods that allow the renderer process to use
@@ -9,6 +10,7 @@ const {
 contextBridge.exposeInMainWorld(
     "api", {
         isElectron: true,
+        desktopCapturer,
         // window: {
         //     minimize: remote.BrowserWindow.getFocusedWindow().minimize(),
         //     maximize: remote.BrowserWindow.getFocusedWindow().maximize(), 
