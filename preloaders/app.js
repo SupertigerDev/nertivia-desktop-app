@@ -9,13 +9,6 @@ const {
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
     "api", {
-        screen() {
-            const {screen} = require('electron');
-            const display = screen.getPrimaryDisplay();
-            return {
-                refreshRate: display.displayFrequency
-            }
-        },
         isElectron: true,
         async getCaptureSources() {
             const sources = await desktopCapturer.getSources({
